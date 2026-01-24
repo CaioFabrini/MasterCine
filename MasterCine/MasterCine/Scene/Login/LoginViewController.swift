@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - LoginViewController
-final class LoginViewController: UIViewController {
+final class LoginViewController: BaseViewController {
 
   // MARK: Properties
   private let viewModel: LoginViewModelProtocol
