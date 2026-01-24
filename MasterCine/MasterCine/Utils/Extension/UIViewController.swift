@@ -43,28 +43,55 @@ public extension UIViewController {
   @objc private func handleKeyboardDismissTap() {
     view.endEditing(true)
   }
-}
 
-private final class KeyboardDismissTapGestureRecognizer: UITapGestureRecognizer, UIGestureRecognizerDelegate {
 
-  private let ignoredViewTypes: [UIView.Type]
+  func topMostViewController() -> UIViewController {
+    var top = self
 
-  init(ignoredViewTypes: [UIView.Type], target: Any?, action: Selector?) {
-    self.ignoredViewTypes = ignoredViewTypes
-    super.init(target: target, action: action)
-    delegate = self
-  }
-
-  // Do not recognize tap if it's on an interactive control that handles its own touches (e.g., inside a UIControl)
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-    guard let touchedView = touch.view else { return true }
-
-    let hierarchy = sequence(first: touchedView) { $0.superview }
-
-    let isIgnored = hierarchy.contains { view in
-      ignoredViewTypes.contains { view.isKind(of: $0) }
+    while let presented = top.presentedViewController {
+      top = presented
     }
 
-    return !isIgnored
+    if let nav = top as? UINavigationController {
+      return nav.visibleViewController ?? nav
+    }
+
+    if let tab = top as? UITabBarController {
+      return tab.selectedViewController ?? tab
+    }
+
+    return top
+  }
+
+  func showAlert(
+    title: String = "Ops!",
+    message: String,
+    buttonTitle: String = "OK",
+    completion: (() -> Void)? = nil
+  ) {
+    DispatchQueue.main.async { [weak self] in
+      guard let self else { return }
+
+      let topVC = self.topMostViewController()
+
+      if let presentedAlert = topVC.presentedViewController as? UIAlertController {
+        presentedAlert.title = title
+        presentedAlert.message = message
+        return
+      }
+
+      let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+      let okAction = UIAlertAction(title: buttonTitle, style: .default) { _ in
+        completion?()
+      }
+
+      alert.addAction(okAction)
+      topVC.present(alert, animated: true)
+    }
+  }
+
+  func showError(message: String) {
+    showAlert(title: "Erro", message: message)
   }
 }

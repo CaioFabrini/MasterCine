@@ -11,12 +11,11 @@ import UIKit
 final class LoginViewController: BaseViewController {
 
   // MARK: Properties
-  private let viewModel: LoginViewModelProtocol
+  private let viewModel: LoginViewModel = LoginViewModel()
   private let screen = LoginScreen()
 
   // MARK: Initializers
-  init(viewModel: LoginViewModelProtocol = LoginViewModel()) {
-    self.viewModel = viewModel
+  init() {
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -32,10 +31,15 @@ final class LoginViewController: BaseViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    configProtocols()
     setupActions()
   }
 
   // MARK: Private
+  private func configProtocols() {
+    viewModel.delegate = self
+  }
+
   private func setupActions() {
     screen.loginButton.addTarget(self, action: #selector(didTapLogin), for: .touchUpInside)
     screen.createAccountButton.addTarget(self, action: #selector(didTapCreateAccount), for: .touchUpInside)
@@ -48,6 +52,24 @@ final class LoginViewController: BaseViewController {
   }
 
   @objc private func didTapCreateAccount() {
-    viewModel.createAccountTapped()
+    print("go to register")
+  }
+}
+
+extension LoginViewController: LoginViewModelProtocol {
+  func startLoading() {
+    Loading.start()
+  }
+  
+  func stopLoading() {
+    Loading.stop()
+  }
+  
+  func loginDidSucceed() {
+    showAlert(message: "Deu boom viu")
+  }
+  
+  func loginDidFail(message: String) {
+    showError(message: message)
   }
 }
