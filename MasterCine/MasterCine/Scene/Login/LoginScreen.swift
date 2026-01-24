@@ -7,9 +7,7 @@
 
 import UIKit
 
-// MARK: - LoginScreen (ViewCode)
 final class LoginScreen: UIView {
-  // MARK: UI Components
   lazy var logoImageView: UIImageView = {
     let imageView = UIImageView()
     let image = UIImage(systemName: "film")
@@ -82,7 +80,6 @@ final class LoginScreen: UIView {
     return stack
   }()
 
-  // MARK: Initializers
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupView()
@@ -93,7 +90,6 @@ final class LoginScreen: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  // MARK: Setup
   private func setupView() {
     backgroundColor = .systemBackground
     addSubviews()
@@ -108,18 +104,15 @@ final class LoginScreen: UIView {
 
   private func setupConstraints() {
     NSLayoutConstraint.activate([
-      // Logo
       logoImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 40),
       logoImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
       logoImageView.heightAnchor.constraint(equalToConstant: 72),
       logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor),
 
-      // Title
       titleLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 12),
       titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
       titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
 
-      // Stack
       stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
       stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
       stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),

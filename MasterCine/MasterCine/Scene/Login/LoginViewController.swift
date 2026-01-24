@@ -7,14 +7,10 @@
 
 import UIKit
 
-// MARK: - LoginViewController
 final class LoginViewController: BaseViewController {
-
-  // MARK: Properties
   private let viewModel: LoginViewModel = LoginViewModel()
   private let screen = LoginScreen()
 
-  // MARK: Initializers
   init() {
     super.init(nibName: nil, bundle: nil)
   }
@@ -24,7 +20,6 @@ final class LoginViewController: BaseViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  // MARK: Lifecycle
   override func loadView() {
     view = screen
   }
@@ -35,7 +30,6 @@ final class LoginViewController: BaseViewController {
     setupActions()
   }
 
-  // MARK: Private
   private func configProtocols() {
     viewModel.delegate = self
   }
