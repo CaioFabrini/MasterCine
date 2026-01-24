@@ -56,7 +56,9 @@ extension LoginViewController: LoginViewModelProtocol {
   }
 
   func loginDidSucceed() {
-    print("logouuuu")
+    let tab = MainTabBarController()
+    tab.modalPresentationStyle = .fullScreen
+    present(tab, animated: true)
   }
 
   func loginDidFail(message: String) {

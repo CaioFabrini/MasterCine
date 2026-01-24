@@ -42,7 +42,9 @@ extension RegisterViewController: RegisterViewModelProtocol {
   }
 
   func registerDidSucceed() {
-    print("BOOM - cadastro ok")
+    let tab = MainTabBarController()
+    tab.modalPresentationStyle = .fullScreen
+    present(tab, animated: true)
   }
 
   func registerDidFail(message: String) {
