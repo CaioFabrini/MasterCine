@@ -11,15 +11,6 @@ final class LoginViewController: BaseViewController {
   private let viewModel: LoginViewModel = LoginViewModel()
   private let screen = LoginScreen()
 
-  init() {
-    super.init(nibName: nil, bundle: nil)
-  }
-
-  @available(*, unavailable)
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
   override func loadView() {
     view = screen
   }
@@ -46,7 +37,12 @@ final class LoginViewController: BaseViewController {
   }
 
   @objc private func didTapCreateAccount() {
-    print("go to register")
+    openRegister()
+  }
+
+  private func openRegister() {
+    let registerVC = RegisterViewController()
+    navigationController?.pushViewController(registerVC, animated: true)
   }
 }
 
@@ -54,15 +50,15 @@ extension LoginViewController: LoginViewModelProtocol {
   func startLoading() {
     Loading.start()
   }
-  
+
   func stopLoading() {
     Loading.stop()
   }
-  
+
   func loginDidSucceed() {
-    showAlert(message: "Deu boom viu")
+    print("logouuuu")
   }
-  
+
   func loginDidFail(message: String) {
     showError(message: message)
   }

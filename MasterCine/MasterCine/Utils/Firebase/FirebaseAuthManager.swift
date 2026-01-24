@@ -14,13 +14,11 @@ public struct AuthFailure: LocalizedError {
   public init(_ message: String) { self.message = message }
 }
 
-public final class FirebaseAuthManager {
+final class FirebaseAuthManager {
 
-  public typealias Completion = (Result<Void, AuthFailure>) -> Void
+  typealias Completion = (Result<Void, AuthFailure>) -> Void
 
-  public init() {}
-
-  public func signIn(email: String, password: String, completion: @escaping Completion) {
+  static func signIn(email: String, password: String, completion: @escaping Completion) {
     Auth.auth().signIn(withEmail: email, password: password) { _, error in
       if let error {
         completion(.failure(self.mapFirebaseError(error)))
@@ -30,7 +28,7 @@ public final class FirebaseAuthManager {
     }
   }
 
-  public func createUser(email: String, password: String, completion: @escaping Completion) {
+  static func createUser(email: String, password: String, completion: @escaping Completion) {
     Auth.auth().createUser(withEmail: email, password: password) { _, error in
       if let error {
         completion(.failure(self.mapFirebaseError(error)))
@@ -40,7 +38,7 @@ public final class FirebaseAuthManager {
     }
   }
 
-  public func signOut() -> Result<Void, AuthFailure> {
+  static func signOut() -> Result<Void, AuthFailure> {
     do {
       try Auth.auth().signOut()
       return .success(())
@@ -49,7 +47,7 @@ public final class FirebaseAuthManager {
     }
   }
 
-  private func mapFirebaseError(_ error: Error) -> AuthFailure {
+  static private func mapFirebaseError(_ error: Error) -> AuthFailure {
     let nsError = error as NSError
 
     guard nsError.domain == AuthErrorDomain,

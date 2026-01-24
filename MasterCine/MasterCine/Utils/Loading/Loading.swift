@@ -7,13 +7,10 @@
 
 import UIKit
 
-// MARK: - Loading (Singleton)
 final class Loading: UIView {
 
-  // MARK: Singleton
   static let shared = Loading()
 
-  // MARK: UI
   private lazy var blurView: UIVisualEffectView = {
     let effect = UIBlurEffect(style: .systemChromeMaterialDark)
     let view = UIVisualEffectView(effect: effect)
@@ -48,7 +45,6 @@ final class Loading: UIView {
     return l
   }()
 
-  // MARK: Init
   private override init(frame: CGRect) {
     super.init(frame: frame)
     setupView()
@@ -59,7 +55,6 @@ final class Loading: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  // MARK: Static API
   static func start(in view: UIView? = nil) {
     DispatchQueue.main.async {
       let target = view ?? UIApplication.mc_primaryKeyWindow
@@ -74,7 +69,6 @@ final class Loading: UIView {
     }
   }
 
-  // MARK: Setup
   private func setupView() {
     isUserInteractionEnabled = true
     backgroundColor = .clear
@@ -93,19 +87,17 @@ final class Loading: UIView {
 
   private func setupConstraints() {
     NSLayoutConstraint.activate([
-      // Fill overlay
+
       blurView.topAnchor.constraint(equalTo: topAnchor),
       blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
       blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
       blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-      // Centered container
       containerView.centerXAnchor.constraint(equalTo: centerXAnchor),
       containerView.centerYAnchor.constraint(equalTo: centerYAnchor),
       containerView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 32),
       containerView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -32),
 
-      // Indicator & label
       activityIndicator.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
       activityIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 
@@ -116,9 +108,7 @@ final class Loading: UIView {
     ])
   }
 
-  // MARK: Show/Hide
   private func show(in view: UIView) {
-    // Avoid duplicates
     if superview != nil { return }
 
     translatesAutoresizingMaskIntoConstraints = false
