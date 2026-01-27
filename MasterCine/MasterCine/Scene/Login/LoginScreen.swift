@@ -36,6 +36,7 @@ final class LoginScreen: UIView {
     tf.autocorrectionType = .no
     tf.borderStyle = .roundedRect
     tf.textContentType = .username
+    tf.text = "caio@outlook.com"
     tf.translatesAutoresizingMaskIntoConstraints = false
     return tf
   }()
@@ -46,6 +47,7 @@ final class LoginScreen: UIView {
     tf.isSecureTextEntry = true
     tf.borderStyle = .roundedRect
     tf.textContentType = .password
+    tf.text = "123456"
     tf.translatesAutoresizingMaskIntoConstraints = false
     return tf
   }()
