@@ -28,6 +28,18 @@ struct Movie: Codable, Equatable {
   let releaseDate: String?
   let voteAverage: Double?
 
+  var urlImage: URL? {
+    guard
+      let posterPath,
+      !posterPath.isEmpty,
+      let base = TMDbConfig.imageBaseURL
+    else { return nil }
+
+    return base
+      .appendingPathComponent(TMDbConfig.posterSize)
+      .appendingPathComponent(posterPath)
+  }
+
   enum CodingKeys: String, CodingKey {
     case id
     case title

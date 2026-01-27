@@ -20,7 +20,7 @@ final class HomeViewController: BaseViewController {
     super.viewDidLoad()
     title = "Home"
     setup()
-    viewModel.viewDidLoad()
+    viewModel.fetchPopularIfNeeded()
   }
 
   private func setup() {
@@ -51,34 +51,45 @@ extension HomeViewController: HomeViewModelProtocol {
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    viewModel.numberOfItems
+    return viewModel.isEmpty ? 1 : viewModel.numberOfItems
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(
-      withIdentifier: MovieCell.identifier,
-      for: indexPath
-    ) as? MovieCell else {
-      return UITableViewCell()
-    }
-
-    cell.setupCell(with: viewModel.movie(at: indexPath.row))
+    if viewModel.isEmpty {
+      guard let cell = tableView.dequeueReusableCell(
+        withIdentifier: EmptyStateTableViewCell.identifier,
+        for: indexPath
+      ) as? EmptyStateTableViewCell else {
+        return UITableViewCell()
+      }
+      cell.setupCell(
+        title: "Nenhum filme encontrado",
+        subtitle: "Tente buscar por outro título."
+      )
     return cell
+    } else {
+      guard let cell = tableView.dequeueReusableCell(
+        withIdentifier: MovieTableViewCell.identifier,
+        for: indexPath
+      ) as? MovieTableViewCell else {
+        return UITableViewCell()
+      }
+
+      cell.setupCell(with: viewModel.loudCurrentMovie(at: indexPath.row))
+      return cell
+    }
   }
 }
 
 extension HomeViewController: UISearchBarDelegate {
 
-  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    viewModel.search(text: searchText)
-  }
-
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     searchBar.resignFirstResponder()
+    viewModel.search(text: searchBar.text ?? "")
   }
 
-  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-    searchBar.text = ""
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    guard searchText.isEmpty else { return }
     searchBar.resignFirstResponder()
     viewModel.search(text: "")
   }

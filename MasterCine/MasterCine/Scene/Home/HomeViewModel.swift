@@ -19,52 +19,51 @@ final class HomeViewModel {
 
   private let service: TMDbServiceProtocol = TMDbService()
   private var movies: [Movie] = []
-  private var pendingSearchWorkItem: DispatchWorkItem?
-  private var currentQuery = ""
 
-  var numberOfItems: Int {
-    movies.count
-  }
+  private var lastPerformedQuery: String = ""
+  private var isShowingPopular: Bool = false
 
-  func viewDidLoad() {
-    fetchPopular()
-  }
+  var numberOfItems: Int { movies.count }
+  var isEmpty: Bool { movies.isEmpty }
 
   func search(text: String) {
-    currentQuery = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    let query = text.trimmingCharacters(in: .whitespacesAndNewlines)
 
-    pendingSearchWorkItem?.cancel()
-
-    let workItem = DispatchWorkItem { [weak self] in
-      guard let self else { return }
-
-      if self.currentQuery.isEmpty {
-        self.fetchPopular()
-      } else {
-        self.searchMovies(query: self.currentQuery)
-      }
+    if query.isEmpty {
+      fetchPopularIfNeeded()
+      return
     }
 
-    pendingSearchWorkItem = workItem
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: workItem)
+    let normalized = query.lowercased()
+    let lastNormalized = lastPerformedQuery.lowercased()
+
+    guard normalized != lastNormalized else { return }
+
+    lastPerformedQuery = query
+    isShowingPopular = false
+    searchMovies(query: query)
   }
 
-  func movie(at index: Int) -> Movie {
+  func loudCurrentMovie(at index: Int) -> Movie {
     movies[index]
+  }
+
+  func fetchPopularIfNeeded() {
+    guard !isShowingPopular else { return }
+    isShowingPopular = true
+    lastPerformedQuery = ""
+    fetchPopular()
   }
 
   private func fetchPopular() {
     setLoading(true)
-
     service.fetchPopular(page: 1) { [weak self] result in
       guard let self else { return }
       self.setLoading(false)
-
       switch result {
       case .success(let response):
         self.movies = response.results
         self.delegate?.didUpdate()
-
       case .failure(let error):
         self.delegate?.didFail(message: error.userMessage)
       }
@@ -73,16 +72,13 @@ final class HomeViewModel {
 
   private func searchMovies(query: String) {
     setLoading(true)
-
     service.search(query: query, page: 1) { [weak self] result in
       guard let self else { return }
       self.setLoading(false)
-
       switch result {
       case .success(let response):
         self.movies = response.results
         self.delegate?.didUpdate()
-
       case .failure(let error):
         self.delegate?.didFail(message: error.userMessage)
       }
@@ -90,8 +86,6 @@ final class HomeViewModel {
   }
 
   private func setLoading(_ isLoading: Bool) {
-    DispatchQueue.main.async { [weak self] in
-      self?.delegate?.didChangeLoading(isLoading: isLoading)
-    }
+    delegate?.didChangeLoading(isLoading: isLoading)
   }
 }

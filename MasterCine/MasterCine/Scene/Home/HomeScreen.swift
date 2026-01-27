@@ -13,18 +13,18 @@ final class HomeScreen: UIView {
     let sb = UISearchBar()
     sb.translatesAutoresizingMaskIntoConstraints = false
     sb.placeholder = "Buscar filmes"
-    sb.searchBarStyle = .minimal
-    sb.showsCancelButton = true
+    sb.searchBarStyle = .default
+    sb.showsCancelButton = false
+    sb.inputAccessoryView = keyboardAccessoryView()
     return sb
   }()
 
   lazy var tableView: UITableView = {
-    let tv = UITableView(frame: .zero, style: .plain)
+    let tv = UITableView()
     tv.translatesAutoresizingMaskIntoConstraints = false
     tv.separatorStyle = .singleLine
-    tv.rowHeight = 76
-    tv.keyboardDismissMode = .onDrag
-    tv.register(MovieCell.self, forCellReuseIdentifier: MovieCell.identifier)
+    tv.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.identifier)
+    tv.register(EmptyStateTableViewCell.self, forCellReuseIdentifier: EmptyStateTableViewCell.identifier)
     return tv
   }()
 
@@ -55,5 +55,26 @@ final class HomeScreen: UIView {
       tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
       tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
     ])
+  }
+
+  private func keyboardAccessoryView() -> UIView {
+    let toolbar = UIToolbar()
+    toolbar.sizeToFit()
+
+    let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+    let done = UIBarButtonItem(
+      title: "Fechar",
+      style: .done,
+      target: self,
+      action: #selector(dismissKeyboard)
+    )
+
+    toolbar.items = [flex, done]
+    return toolbar
+  }
+
+  @objc private func dismissKeyboard() {
+    endEditing(true)
   }
 }

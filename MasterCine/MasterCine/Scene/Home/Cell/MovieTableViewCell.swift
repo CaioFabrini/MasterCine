@@ -7,21 +7,21 @@
 
 import UIKit
 
-final class MovieCell: UITableViewCell {
+final class MovieTableViewCell: UITableViewCell {
 
-  static let identifier: String = String(describing: MovieCell.self)
+  static let identifier: String = String(describing: MovieTableViewCell.self)
 
-  private let posterImageView: UIImageView = {
+  private lazy var posterImageView: UIImageView = {
     let iv = UIImageView()
     iv.translatesAutoresizingMaskIntoConstraints = false
-    iv.contentMode = .scaleAspectFill
+    iv.contentMode = .scaleToFill
     iv.clipsToBounds = true
     iv.layer.cornerRadius = 8
     iv.backgroundColor = UIColor.lightGray.withAlphaComponent(0.15)
     return iv
   }()
 
-  private let titleLabel: UILabel = {
+  private lazy var titleLabel: UILabel = {
     let lb = UILabel()
     lb.translatesAutoresizingMaskIntoConstraints = false
     lb.font = .systemFont(ofSize: 16, weight: .semibold)
@@ -29,7 +29,7 @@ final class MovieCell: UITableViewCell {
     return lb
   }()
 
-  private let subtitleLabel: UILabel = {
+  private lazy var subtitleLabel: UILabel = {
     let lb = UILabel()
     lb.translatesAutoresizingMaskIntoConstraints = false
     lb.font = .systemFont(ofSize: 13, weight: .regular)
@@ -55,7 +55,7 @@ final class MovieCell: UITableViewCell {
     titleLabel.text = movie.title
     subtitleLabel.text = buildSubtitle(movie)
 
-    if let url = TMDbService().makePosterURL(path: movie.posterPath) {
+    if let url = movie.urlImage {
       ImageLoader.shared.load(url: url, into: posterImageView)
     }
   }
@@ -77,18 +77,18 @@ final class MovieCell: UITableViewCell {
   private func setupConstraints() {
     NSLayoutConstraint.activate([
       posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-      posterImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-      posterImageView.widthAnchor.constraint(equalToConstant: 44),
-      posterImageView.heightAnchor.constraint(equalToConstant: 60),
+      posterImageView.widthAnchor.constraint(equalToConstant: 84),
+      posterImageView.heightAnchor.constraint(equalToConstant: 100),
+      posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+      posterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
 
-      titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 14),
+      titleLabel.topAnchor.constraint(equalTo: posterImageView.topAnchor),
       titleLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 12),
       titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
       subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
       subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-      subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-      subtitleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -14)
+      subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
     ])
   }
 }
