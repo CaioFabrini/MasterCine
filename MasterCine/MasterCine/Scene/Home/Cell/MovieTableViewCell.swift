@@ -14,7 +14,7 @@ final class MovieTableViewCell: UITableViewCell {
   private lazy var posterImageView: UIImageView = {
     let iv = UIImageView()
     iv.translatesAutoresizingMaskIntoConstraints = false
-    iv.contentMode = .scaleToFill
+    iv.contentMode = .scaleAspectFill
     iv.clipsToBounds = true
     iv.layer.cornerRadius = 8
     iv.backgroundColor = UIColor.lightGray.withAlphaComponent(0.15)
@@ -41,9 +41,7 @@ final class MovieTableViewCell: UITableViewCell {
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
-    contentView.addSubview(posterImageView)
-    contentView.addSubview(titleLabel)
-    contentView.addSubview(subtitleLabel)
+    addElements()
     setupConstraints()
   }
 
@@ -51,13 +49,16 @@ final class MovieTableViewCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  func addElements() {
+    contentView.addSubview(posterImageView)
+    contentView.addSubview(titleLabel)
+    contentView.addSubview(subtitleLabel)
+  }
+
   func setupCell(with movie: Movie) {
     titleLabel.text = movie.title
     subtitleLabel.text = buildSubtitle(movie)
-
-    if let url = movie.urlImage {
-      ImageLoader.shared.load(url: url, into: posterImageView)
-    }
+    ImageLoader.shared.load(url: movie.urlImage, into: posterImageView, errorImage: UIImage(systemName: "person.slash"), showsLoading: true)
   }
 
   private func buildSubtitle(_ movie: Movie) -> String {
