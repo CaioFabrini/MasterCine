@@ -20,6 +20,7 @@ final class ImageLoader {
     showsLoading: Bool = true
   ) {
     imageView.image = nil
+    imageView.accessibilityIdentifier = url?.absoluteString
 
     guard let url else {
       imageView.image = errorImage
@@ -35,6 +36,10 @@ final class ImageLoader {
 
     ImageService.shared.download(from: url) { result in
       spinner?.removeFromSuperview()
+
+      guard imageView.accessibilityIdentifier == url.absoluteString else {
+        return
+      }
 
       switch result {
       case .success(let image):

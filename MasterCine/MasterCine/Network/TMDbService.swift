@@ -10,6 +10,7 @@ import Foundation
 protocol TMDbServiceProtocol {
   func fetchPopular(page: Int, completion: @escaping (Result<MovieResponse, NetworkError>) -> Void)
   func search(query: String, page: Int, completion: @escaping (Result<MovieResponse, NetworkError>) -> Void)
+  func fetchMovieDetail(id: Int, completion: @escaping (Result<MovieDetailResponse, NetworkError>) -> Void)
 }
 
 final class TMDbService: TMDbServiceProtocol {
@@ -57,6 +58,25 @@ final class TMDbService: TMDbServiceProtocol {
         URLQueryItem(name: "query", value: query),
         URLQueryItem(name: "page", value: "\(page)"),
         URLQueryItem(name: "include_adult", value: "false")
+      ]),
+      completion: completion
+    )
+  }
+
+  func fetchMovieDetail(
+    id: Int,
+    completion: @escaping (Result<MovieDetailResponse, NetworkError>) -> Void
+  ) {
+    guard baseURL.scheme != nil else {
+      DispatchQueue.main.async { completion(.failure(.invalidURL)) }
+      return
+    }
+
+    client.request(
+      baseURL: baseURL,
+      path: "/movie/\(id)",
+      queryItems: defaultQueryItems(extra: [
+        URLQueryItem(name: "append_to_response", value: "credits,videos,recommendations")
       ]),
       completion: completion
     )

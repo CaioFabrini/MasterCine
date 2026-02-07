@@ -62,22 +62,20 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
       ) as? EmptyStateTableViewCell else {
         return UITableViewCell()
       }
-      cell.setupCell(
-        title: "Nenhum filme encontrado",
-        subtitle: "Tente buscar por outro título."
-      )
+      cell.setupCell(title: "Nenhum filme encontrado", subtitle: "Tente buscar por outro título.")
     return cell
     } else {
-      guard let cell = tableView.dequeueReusableCell(
-        withIdentifier: MovieTableViewCell.identifier,
-        for: indexPath
-      ) as? MovieTableViewCell else {
-        return UITableViewCell()
-      }
-
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier,
+                                                     for: indexPath) as? MovieTableViewCell else { return UITableViewCell() }
       cell.setupCell(with: viewModel.loudCurrentMovie(at: indexPath.row))
       return cell
     }
+  }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let movieId = viewModel.loudCurrentMovie(at: indexPath.row).id
+    let vc = MovieDetailViewController(viewModel: MovieDetailViewModel(movieId: movieId))
+    navigationController?.pushViewController(vc, animated: true)
   }
 }
 

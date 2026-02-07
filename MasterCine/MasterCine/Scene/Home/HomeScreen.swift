@@ -25,6 +25,7 @@ final class HomeScreen: UIView {
     tv.separatorStyle = .singleLine
     tv.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.identifier)
     tv.register(EmptyStateTableViewCell.self, forCellReuseIdentifier: EmptyStateTableViewCell.identifier)
+    tv.register(ErrorTableViewCell.self, forCellReuseIdentifier: ErrorTableViewCell.identifier)
     return tv
   }()
 
