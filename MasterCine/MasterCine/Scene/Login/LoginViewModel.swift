@@ -34,14 +34,13 @@ final class LoginViewModel {
 
     FirebaseAuthManager.signIn(email: email, password: password) { [weak self] result in
       guard let self else { return }
-      self.delegate?.stopLoading()
+      delegate?.stopLoading()
 
       switch result {
       case .success:
-        self.delegate?.loginDidSucceed()
-
+        delegate?.loginDidSucceed()
       case .failure(let error):
-        self.delegate?.loginDidFail(message: error.message)
+        delegate?.loginDidFail(message: error.message)
       }
     }
   }

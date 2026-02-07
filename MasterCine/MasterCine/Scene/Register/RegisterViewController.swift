@@ -10,9 +10,13 @@ final class RegisterViewController: BaseViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    viewModel.delegate = self
+    configProtocol()
     setupActions()
     title = "Cadastro"
+  }
+
+  private func configProtocol() {
+    viewModel.delegate = self
   }
 
   private func setupActions() {

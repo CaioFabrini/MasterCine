@@ -16,9 +16,9 @@ public struct AuthFailure: LocalizedError {
 
 final class FirebaseAuthManager {
 
-  typealias Completion = (Result<Void, AuthFailure>) -> Void
+  typealias AllResult = (Result<Void, AuthFailure>) -> Void
 
-  static func signIn(email: String, password: String, completion: @escaping Completion) {
+  static func signIn(email: String, password: String, completion: @escaping AllResult) {
     Auth.auth().signIn(withEmail: email, password: password) { _, error in
       if let error {
         completion(.failure(self.mapFirebaseError(error)))
@@ -28,7 +28,7 @@ final class FirebaseAuthManager {
     }
   }
 
-  static func createUser(email: String, password: String, completion: @escaping Completion) {
+  static func createUser(email: String, password: String, completion: @escaping AllResult) {
     Auth.auth().createUser(withEmail: email, password: password) { _, error in
       if let error {
         completion(.failure(self.mapFirebaseError(error)))
