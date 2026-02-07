@@ -78,4 +78,9 @@ final class HomeScreen: UIView {
   @objc private func dismissKeyboard() {
     endEditing(true)
   }
+
+  func configTableViewProtocols(delegate: UITableViewDelegate, dataSource: UITableViewDataSource) {
+    tableView.delegate = delegate
+    tableView.dataSource = dataSource
+  }
 }

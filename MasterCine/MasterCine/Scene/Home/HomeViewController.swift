@@ -19,28 +19,20 @@ final class HomeViewController: BaseViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     title = "Home"
-    setup()
+    configProtocols()
     viewModel.fetchPopularIfNeeded()
   }
 
-  private func setup() {
+  private func configProtocols() {
     viewModel.delegate = self
-    screen.tableView.dataSource = self
-    screen.tableView.delegate = self
     screen.searchBar.delegate = self
+    screen.configTableViewProtocols(delegate: self, dataSource: self)
   }
 }
 
 extension HomeViewController: HomeViewModelProtocol {
-
   func didUpdate() {
     screen.tableView.reloadData()
-  }
-
-  func didFail(message: String) {
-    let alert = UIAlertController(title: "Erro", message: message, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default))
-    present(alert, animated: true)
   }
 
   func didChangeLoading(isLoading: Bool) {
@@ -51,19 +43,21 @@ extension HomeViewController: HomeViewModelProtocol {
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return viewModel.isEmpty ? 1 : viewModel.numberOfItems
+    return viewModel.numberOfRowsInSection
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    if viewModel.isEmpty {
-      guard let cell = tableView.dequeueReusableCell(
-        withIdentifier: EmptyStateTableViewCell.identifier,
-        for: indexPath
-      ) as? EmptyStateTableViewCell else {
-        return UITableViewCell()
-      }
+    if viewModel.isError {
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: ErrorTableViewCell.identifier,
+                                                     for: indexPath) as? ErrorTableViewCell else { return UITableViewCell() }
+      cell.setupCell(message: "Deu ruim em")
+      return cell
+    } else if viewModel.isEmptyMovie {
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: EmptyStateTableViewCell.identifier,
+                                                     for: indexPath) as? EmptyStateTableViewCell else { return UITableViewCell() }
       cell.setupCell(title: "Nenhum filme encontrado", subtitle: "Tente buscar por outro título.")
-    return cell
+      return cell
+
     } else {
       guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier,
                                                      for: indexPath) as? MovieTableViewCell else { return UITableViewCell() }
@@ -73,6 +67,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    guard !viewModel.isEmptyMovie && !viewModel.isError else { return }
     let movieId = viewModel.loudCurrentMovie(at: indexPath.row).id
     let vc = MovieDetailViewController(viewModel: MovieDetailViewModel(movieId: movieId))
     navigationController?.pushViewController(vc, animated: true)
@@ -80,7 +75,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension HomeViewController: UISearchBarDelegate {
-
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     searchBar.resignFirstResponder()
     viewModel.search(text: searchBar.text ?? "")

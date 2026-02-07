@@ -9,7 +9,6 @@ import Foundation
 
 protocol HomeViewModelProtocol: AnyObject {
   func didUpdate()
-  func didFail(message: String)
   func didChangeLoading(isLoading: Bool)
 }
 
@@ -22,9 +21,21 @@ final class HomeViewModel {
 
   private var lastPerformedQuery: String = ""
   private var isShowingPopular: Bool = false
+  private var finishedFirstRequest = false
+  private(set) var isError: Bool = false
+  
+  var numberOfRowsInSection: Int {
+    guard finishedFirstRequest else { return 0 }
+    if isError || movies.isEmpty {
+      return 1
+    } else {
+      return movies.count
+    }
+  }
 
-  var numberOfItems: Int { movies.count }
-  var isEmpty: Bool { movies.isEmpty }
+  var isEmptyMovie: Bool {
+    return movies.isEmpty
+  }
 
   func search(text: String) {
     let query = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -59,14 +70,16 @@ final class HomeViewModel {
     setLoading(true)
     service.fetchPopular(page: 1) { [weak self] result in
       guard let self else { return }
-      self.setLoading(false)
+      setLoading(false)
+      finishedFirstRequest = true
       switch result {
       case .success(let response):
-        self.movies = response.results
-        self.delegate?.didUpdate()
-      case .failure(let error):
-        self.delegate?.didFail(message: error.userMessage)
+        isError = false
+        movies = response.results
+      case .failure:
+        isError = true
       }
+      delegate?.didUpdate()
     }
   }
 
@@ -74,14 +87,15 @@ final class HomeViewModel {
     setLoading(true)
     service.search(query: query, page: 1) { [weak self] result in
       guard let self else { return }
-      self.setLoading(false)
+      setLoading(false)
       switch result {
       case .success(let response):
-        self.movies = response.results
-        self.delegate?.didUpdate()
-      case .failure(let error):
-        self.delegate?.didFail(message: error.userMessage)
+        isError = false
+        movies = response.results
+      case .failure:
+        isError = true
       }
+      delegate?.didUpdate()
     }
   }
 
