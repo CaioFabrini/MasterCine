@@ -26,12 +26,12 @@ final class MovieDetailViewModel {
 
   weak var delegate: MovieDetailViewModelProtocol?
 
-  private let service: TMDbServiceProtocol
+  private let service: MovieDetailServiceProtocol
   private let movieId: Int
 
   private var rows: [MovieDetailRow] = []
 
-  init(movieId: Int, service: TMDbServiceProtocol = TMDbService()) {
+  init(movieId: Int, service: MovieDetailServiceProtocol = MovieDetailService()) {
     self.movieId = movieId
     self.service = service
   }
@@ -50,7 +50,7 @@ final class MovieDetailViewModel {
         delegate?.didUpdate()
 
       case .failure(let error):
-        rows = [.error(message: error.userMessage)]
+        rows = [.error(message: error.errorDescription ?? "Erro desconhecido")]
         delegate?.didUpdate()
       }
     }

@@ -31,9 +31,11 @@ final class LoginViewController: BaseViewController {
   }
 
   @objc private func didTapLogin() {
-    let email = screen.emailTextField.text ?? ""
-    let password = screen.passwordTextField.text ?? ""
-    viewModel.login(email: email, password: password)
+//    let email = screen.emailTextField.text ?? ""
+//    let password = screen.passwordTextField.text ?? ""
+//    viewModel.login(email: email, password: password)
+    let numbers = [0]
+    let _ = numbers[1]
   }
 
   @objc private func didTapCreateAccount() {

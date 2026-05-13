@@ -10,8 +10,8 @@ import UIKit
 struct HeaderViewData {
   let title: String
   let subtitle: String
-  let posterURL: URL?
-  let backdropURL: URL?
+  let posterURL: String?
+  let backdropURL: String?
 }
 
 struct ActionsViewData {

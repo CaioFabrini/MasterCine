@@ -12,7 +12,7 @@ protocol NetworkClientProtocol {
     baseURL: URL,
     path: String,
     queryItems: [URLQueryItem],
-    completion: @escaping (Result<T, NetworkError>) -> Void
+    completion: @escaping (Result<T, NetworkError2>) -> Void
   )
 }
 
@@ -28,7 +28,7 @@ final class NetworkClient: NetworkClientProtocol {
     baseURL: URL,
     path: String,
     queryItems: [URLQueryItem],
-    completion: @escaping (Result<T, NetworkError>) -> Void
+    completion: @escaping (Result<T, NetworkError2>) -> Void
   ) {
     var components = URLComponents(
       url: baseURL.appendingPathComponent(path),
@@ -45,13 +45,13 @@ final class NetworkClient: NetworkClientProtocol {
     let startTime = Date()
 
     session.dataTask(with: urlRequest) { data, response, error in
-      NetworkLogger.log(
-        request: urlRequest,
-        response: response,
-        data: data,
-        error: error,
-        startTime: startTime
-      )
+//      NetworkLogger.log(
+//        request: urlRequest,
+//        response: response,
+//        data: data,
+//        error: error,
+//        startTime: startTime
+//      )
 
       if let error {
         DispatchQueue.main.async { completion(.failure(.transport(error))) }

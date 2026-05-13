@@ -8,12 +8,28 @@
 import Foundation
 
 struct TMDbConfig {
-  static let apiKey = "c892a7d14f1039dde2aab253840f4855"
-
-  static let baseURLString = "https://api.themoviedb.org/3"
-  static let imageBaseURLString = "https://image.tmdb.org/t/p"
   static let posterSize = "w342"
 
+  static var apiKey: String {
+    guard let key = Bundle.main.infoDictionary?["APIKey"] as? String else {
+      fatalError("APIKey não encontrada no Info.plist")
+    }
+    return key
+  }
+
+  static var baseURLString: String {
+    guard let url = Bundle.main.infoDictionary?["BaseURL"] as? String else {
+      fatalError("BaseURL não encontrada no Info.plist")
+    }
+    return url
+  }
+
+  static var imageBaseURLString: String {
+    guard let url = Bundle.main.infoDictionary?["ImageBaseURL"] as? String else {
+      fatalError("ImageBaseURL não encontrada no Info.plist")
+    }
+    return url
+  }
+
   static var baseURL: URL? { URL(string: baseURLString) }
-  static var imageBaseURL: URL? { URL(string: imageBaseURLString) }
 }

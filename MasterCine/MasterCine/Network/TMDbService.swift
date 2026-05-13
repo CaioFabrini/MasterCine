@@ -8,9 +8,9 @@
 import Foundation
 
 protocol TMDbServiceProtocol {
-  func fetchPopular(page: Int, completion: @escaping (Result<MovieResponse, NetworkError>) -> Void)
-  func search(query: String, page: Int, completion: @escaping (Result<MovieResponse, NetworkError>) -> Void)
-  func fetchMovieDetail(id: Int, completion: @escaping (Result<MovieDetailResponse, NetworkError>) -> Void)
+  func fetchPopular(page: Int, completion: @escaping (Result<MovieResponse, NetworkError2>) -> Void)
+  func search(query: String, page: Int, completion: @escaping (Result<MovieResponse, NetworkError2>) -> Void)
+  func fetchMovieDetail(id: Int, completion: @escaping (Result<MovieDetailResponse, NetworkError2>) -> Void)
 }
 
 final class TMDbService: TMDbServiceProtocol {
@@ -29,7 +29,7 @@ final class TMDbService: TMDbServiceProtocol {
     self.baseURL = baseURL ?? URL(fileURLWithPath: "/")
   }
 
-  func fetchPopular(page: Int, completion: @escaping (Result<MovieResponse, NetworkError>) -> Void) {
+  func fetchPopular(page: Int, completion: @escaping (Result<MovieResponse, NetworkError2>) -> Void) {
     guard baseURL.scheme != nil else {
       DispatchQueue.main.async { completion(.failure(.invalidURL)) }
       return
@@ -45,7 +45,7 @@ final class TMDbService: TMDbServiceProtocol {
     )
   }
 
-  func search(query: String, page: Int, completion: @escaping (Result<MovieResponse, NetworkError>) -> Void) {
+  func search(query: String, page: Int, completion: @escaping (Result<MovieResponse, NetworkError2>) -> Void) {
     guard baseURL.scheme != nil else {
       DispatchQueue.main.async { completion(.failure(.invalidURL)) }
       return
@@ -65,7 +65,7 @@ final class TMDbService: TMDbServiceProtocol {
 
   func fetchMovieDetail(
     id: Int,
-    completion: @escaping (Result<MovieDetailResponse, NetworkError>) -> Void
+    completion: @escaping (Result<MovieDetailResponse, NetworkError2>) -> Void
   ) {
     guard baseURL.scheme != nil else {
       DispatchQueue.main.async { completion(.failure(.invalidURL)) }

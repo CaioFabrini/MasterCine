@@ -11,6 +11,8 @@ final class Loading: UIView {
 
   static let shared = Loading()
 
+  private var loadingCount = 0
+
   private lazy var blurView: UIVisualEffectView = {
     let effect = UIBlurEffect(style: .systemChromeMaterialDark)
     let view = UIVisualEffectView(effect: effect)
@@ -55,20 +57,6 @@ final class Loading: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  static func start(in view: UIView? = nil) {
-    DispatchQueue.main.async {
-      let target = view ?? UIApplication.mc_primaryKeyWindow
-      guard let container = target else { return }
-      Loading.shared.show(in: container)
-    }
-  }
-
-  static func stop() {
-    DispatchQueue.main.async {
-      Loading.shared.hide()
-    }
-  }
-
   private func setupView() {
     isUserInteractionEnabled = true
     backgroundColor = .clear
@@ -87,7 +75,6 @@ final class Loading: UIView {
 
   private func setupConstraints() {
     NSLayoutConstraint.activate([
-
       blurView.topAnchor.constraint(equalTo: topAnchor),
       blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
       blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -108,10 +95,42 @@ final class Loading: UIView {
     ])
   }
 
-  private func show(in view: UIView) {
-    if superview != nil { return }
+  static func start(in view: UIView? = nil) {
+    DispatchQueue.main.async {
+      let target = view ?? UIApplication.mc_primaryKeyWindow
+      guard let container = target else { return }
+      Loading.shared.incrementAndShow(in: container)
+    }
+  }
 
+  static func stop() {
+    DispatchQueue.main.async {
+      Loading.shared.decrementAndHideIfNeeded()
+    }
+  }
+
+  private func incrementAndShow(in view: UIView) {
+    loadingCount += 1
+
+    guard superview == nil else { return }
+
+    show(in: view)
+  }
+
+  private func decrementAndHideIfNeeded() {
+    guard loadingCount > 0 else { return }
+
+    loadingCount -= 1
+
+    if loadingCount == 0 {
+      hide()
+    }
+  }
+
+  private func show(in view: UIView) {
     translatesAutoresizingMaskIntoConstraints = false
+    alpha = 0.0
+
     view.addSubview(self)
 
     NSLayoutConstraint.activate([
@@ -129,7 +148,6 @@ final class Loading: UIView {
   }
 
   private func hide() {
-    guard superview != nil else { return }
     UIView.animate(withDuration: 0.25, animations: {
       self.alpha = 0.0
     }, completion: { _ in

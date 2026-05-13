@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		341327782F2545F3008A342A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 341327772F2545F3008A342A /* FirebaseAuth */; };
 		3413277A2F2545F3008A342A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 341327792F2545F3008A342A /* FirebaseCrashlytics */; };
+		3423110A2F9FD81000AA9860 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 342311092F9FD81000AA9860 /* FirebaseRemoteConfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3423110A2F9FD81000AA9860 /* FirebaseRemoteConfig in Frameworks */,
 				341327782F2545F3008A342A /* FirebaseAuth in Frameworks */,
 				3413277A2F2545F3008A342A /* FirebaseCrashlytics in Frameworks */,
 			);
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				3413274C2F253955008A342A /* MasterCine */,
+				342311082F9FD81000AA9860 /* Frameworks */,
 				3413274B2F253955008A342A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +68,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		342311082F9FD81000AA9860 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -75,6 +85,7 @@
 				341327462F253955008A342A /* Sources */,
 				341327472F253955008A342A /* Frameworks */,
 				341327482F253955008A342A /* Resources */,
+				34B600F92FA1278000AF17E9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -87,6 +98,7 @@
 			packageProductDependencies = (
 				341327772F2545F3008A342A /* FirebaseAuth */,
 				341327792F2545F3008A342A /* FirebaseCrashlytics */,
+				342311092F9FD81000AA9860 /* FirebaseRemoteConfig */,
 			);
 			productName = MasterCine;
 			productReference = 3413274A2F253955008A342A /* MasterCine.app */;
@@ -139,6 +151,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		34B600F92FA1278000AF17E9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}.debug.dylib",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		341327462F253955008A342A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -157,6 +195,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UW32VS6S34;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MasterCine/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -193,6 +233,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UW32VS6S34;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MasterCine/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -385,6 +426,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 341327762F2545F3008A342A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		342311092F9FD81000AA9860 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 341327762F2545F3008A342A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

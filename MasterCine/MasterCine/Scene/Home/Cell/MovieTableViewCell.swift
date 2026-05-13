@@ -58,7 +58,9 @@ final class MovieTableViewCell: UITableViewCell {
   func setupCell(with movie: Movie) {
     titleLabel.text = movie.title
     subtitleLabel.text = buildSubtitle(movie)
-    ImageLoader.shared.load(url: movie.urlImage, into: posterImageView, errorImage: UIImage(systemName: "person.slash"), showsLoading: true)
+    if let urlImage = movie.urlImage {
+      posterImageView.downloadImage(urlString: urlImage)
+    }
   }
 
   private func buildSubtitle(_ movie: Movie) -> String {

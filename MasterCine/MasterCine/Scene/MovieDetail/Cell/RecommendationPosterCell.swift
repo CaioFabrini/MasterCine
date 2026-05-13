@@ -41,11 +41,8 @@ final class RecommendationPosterCell: UICollectionViewCell {
     ])
   }
 
-  func setImageURL(posterURL: URL?) {
-    ImageLoader.shared.load(
-      url: posterURL,
-      into: imageView,
-      showsLoading: false
-    )
+  func setImageURL(posterURL: String?) {
+    guard let posterURL else { return }
+    imageView.downloadImage(urlString: posterURL)
   }
 }

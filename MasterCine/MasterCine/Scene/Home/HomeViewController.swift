@@ -20,7 +20,7 @@ final class HomeViewController: BaseViewController {
     super.viewDidLoad()
     title = "Home"
     configProtocols()
-    viewModel.fetchPopularIfNeeded()
+    viewModel.fetchPopularMovies()
   }
 
   private func configProtocols() {
@@ -31,12 +31,12 @@ final class HomeViewController: BaseViewController {
 }
 
 extension HomeViewController: HomeViewModelProtocol {
-  func didUpdate() {
+  func didUpdateMovies() {
     screen.tableView.reloadData()
   }
 
-  func didChangeLoading(isLoading: Bool) {
-    _ = isLoading ? Loading.start() : Loading.stop()
+  func didChangeLoading(start: Bool) {
+    _ = start ? Loading.start() : Loading.stop()
   }
 }
 
@@ -59,16 +59,24 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
       return cell
 
     } else {
-      guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.identifier,
-                                                     for: indexPath) as? MovieTableViewCell else { return UITableViewCell() }
-      cell.setupCell(with: viewModel.loudCurrentMovie(at: indexPath.row))
+      guard let cell = tableView.dequeueReusableCell(
+        withIdentifier: MovieTableViewCell.identifier,
+        for: indexPath
+      ) as? MovieTableViewCell else {
+        return UITableViewCell()
+      }
+      
+      cell.setupCell(with: viewModel.loadCurrentMovie(index: indexPath.row))
+
+      viewModel.loadNextPageIfNeeded(index: indexPath.row)
+
       return cell
     }
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard !viewModel.isEmptyMovie && !viewModel.isError else { return }
-    let movieId = viewModel.loudCurrentMovie(at: indexPath.row).id
+    guard !viewModel.isEmptyMovie && !viewModel.isError && RemoteConfigManager.shared.getBool(forKey: .showNewHome) else { return }
+    let movieId = viewModel.loadCurrentMovie(index: indexPath.row).id
     let vc = MovieDetailViewController(viewModel: MovieDetailViewModel(movieId: movieId))
     navigationController?.pushViewController(vc, animated: true)
   }

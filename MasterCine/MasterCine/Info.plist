@@ -21,5 +21,11 @@
 	</dict>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
+	<key>BaseURL</key>
+	<string>https://api.themoviedb.org/3</string>
+	<key>ImageBaseURL</key>
+	<string>https://image.tmdb.org/t/p</string>
+	<key>APIKey</key>
+	<string>c892a7d14f1039dde2aab253840f4855</string>
 </dict>
 </plist>

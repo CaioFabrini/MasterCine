@@ -38,17 +38,13 @@ final class HeaderTableViewCell: UITableViewCell {
     headerView.titleLabel.text = headerData.title
     headerView.subtitleLabel.text = headerData.subtitle
 
-    ImageLoader.shared.load(
-      url: headerData.posterURL,
-      into: headerView.posterImageView,
-      showsLoading: false
-    )
+    if let posterURL = headerData.posterURL {
+      headerView.posterImageView.downloadImage(urlString: posterURL)
+    }
 
-    ImageLoader.shared.load(
-      url: headerData.backdropURL,
-      into: headerView.backdropImageView,
-      showsLoading: true
-    )
+    if let backdropURL = headerData.backdropURL {
+      headerView.backdropImageView.downloadImage(urlString: backdropURL)
+    }
   }
 
   private func setupView() {

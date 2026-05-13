@@ -78,11 +78,8 @@ final class CastCollectionViewCell: UICollectionViewCell {
     nameLabel.text = cast.name
     characterLabel.text = cast.character
 
-    ImageLoader.shared.load(
-      url: cast.profileURL,
-      into: imageView,
-      errorImage: UIImage(systemName: "person.crop.circle.fill"),
-      showsLoading: true
-    )
+    if let profileURL = cast.profileURL {
+      imageView.downloadImage(urlString: profileURL)
+    }
   }
 }

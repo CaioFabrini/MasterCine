@@ -36,14 +36,14 @@ struct MovieDetailResponse: Decodable, Equatable {
     case recommendations
   }
 
-  var posterURL: URL? {
-    guard let posterPath, !posterPath.isEmpty, let base = TMDbConfig.imageBaseURL else { return nil }
-    return base.appendingPathComponent(TMDbConfig.posterSize).appendingPathComponent(posterPath)
+  var posterURL: String? {
+    guard let posterPath, !posterPath.isEmpty else { return nil }
+    return "\(TMDbConfig.imageBaseURLString)/\(TMDbConfig.posterSize)\(posterPath)"
   }
 
-  var backdropURL: URL? {
-    guard let backdropPath, !backdropPath.isEmpty, let base = TMDbConfig.imageBaseURL else { return nil }
-    return base.appendingPathComponent("w780").appendingPathComponent(backdropPath)
+  var backdropURL: String? {
+    guard let backdropPath, !backdropPath.isEmpty else { return nil }
+    return "\(TMDbConfig.imageBaseURLString)/w780\(backdropPath)"
   }
 }
 
@@ -69,9 +69,9 @@ struct CastMember: Decodable, Equatable {
     case profilePath = "profile_path"
   }
 
-  var profileURL: URL? {
-    guard let profilePath, !profilePath.isEmpty, let base = TMDbConfig.imageBaseURL else { return nil }
-    return base.appendingPathComponent("w185").appendingPathComponent(profilePath)
+  var profileURL: String? {
+    guard let profilePath, !profilePath.isEmpty else { return nil }
+    return "\(TMDbConfig.imageBaseURLString)/w185\(profilePath)"
   }
 }
 
@@ -106,15 +106,8 @@ struct MovieSummary: Decodable, Equatable {
     case posterPath = "poster_path"
   }
 
-  var posterURL: URL? {
-    guard
-      let posterPath,
-      !posterPath.isEmpty,
-      let base = TMDbConfig.imageBaseURL
-    else { return nil }
-
-    return base
-      .appendingPathComponent(TMDbConfig.posterSize)
-      .appendingPathComponent(posterPath)
+  var posterURL: String? {
+    guard let posterPath, !posterPath.isEmpty else { return nil }
+    return "\(TMDbConfig.imageBaseURLString)/\(TMDbConfig.posterSize)\(posterPath)"
   }
 }
